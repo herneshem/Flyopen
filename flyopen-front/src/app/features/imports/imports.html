@@ -1,0 +1,19 @@
+<div class="contentImports">
+  <div class="blockImports">
+    <h2>Importar piezas</h2>
+
+    <input type="file" accept=".xlsx" (change)="selectFile($event)" />
+    <button (click)="importFile()" [disabled]="!selectedFile() || isLoading()">
+      {{ isLoading() ? 'Importando...' : 'Importar' }}
+    </button>
+    <button (click)="exportExcel()">Exportar a Excel</button>
+
+    @if (message()) {
+    <p class="ok">{{ message() }}</p>
+    }
+    @if (error()) {
+    <p class="error">{{ error() }}</p>
+    }
+  </div>
+
+</div>

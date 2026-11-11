@@ -1,0 +1,92 @@
+<div class="layout">
+  <section class="tree">
+    <h2>Árbol del dron</h2>
+
+    <div class="profiles">
+      @for (profile of profiles(); track profile.id) {
+        <button class="profile-button"
+                [class.active]="drone()?.profileCode === profile.code"
+                (click)="createDrone(profile)">{{ profile.name }}</button>
+      }
+    </div>
+
+    @if (drone()) {
+      <ul class="tree-list">
+        @for (row of rows(); track row.node.id) {
+          <li class="node" [style.margin-left.rem]="row.depth * 1.25">
+            <button class="tree-toggle" type="button"
+                    [disabled]="!row.hasChildren"
+                    [attr.aria-expanded]="row.hasChildren ? expandedNodeIds().has(row.node.id) : null"
+                    [attr.aria-label]="expandedNodeIds().has(row.node.id) ? 'Contraer rama' : 'Expandir rama'"
+                    (click)="toggleNode(row.node.id)">
+              @if (row.hasChildren) {
+                <span [class.collapsed]="!expandedNodeIds().has(row.node.id)">⌄</span>
+              } @else {
+                <span class="tree-leaf">·</span>
+              }
+            </button>
+            <button class="node-content" type="button"
+                    [class.selected]="selectedNodeId() === row.node.id"
+                    (click)="selectNode(row.node)">
+              <span class="slot">{{ row.node.slotType }} ×{{ row.node.quantity }}</span>
+              @if (row.node.componentName) {
+                <strong>{{ row.node.componentName }}</strong>
+              } @else {
+                <em>vacío</em>
+              }
+            </button>
+            @if (row.node.componentName) {
+              <button class="clear-button" type="button" aria-label="Quitar pieza"
+                      (click)="clear(row.node)">×</button>
+            }
+          </li>
+        }
+      </ul>
+
+      @if (selectedNode(); as node) {
+        <p class="caption">Piezas de tipo {{ node.slotType }}</p>
+        <div class="catalog-strip">
+          @for (part of compatibleParts(); track part.id) {
+            <button class="chip" (click)="assign(part)">{{ part.name }}</button>
+          } @empty {
+            <span class="empty">No hay piezas de este tipo en el catálogo</span>
+          }
+        </div>
+      }
+    } @else {
+      <p class="empty">Elige un perfil para empezar</p>
+    }
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </section>
+
+  <section class="image">
+    <h2>Imagen</h2>
+    <div class="image-box">
+      @if (selected(); as part) {
+        <span>{{ part.type ?? part.name }}</span>
+      } @else {
+        <span>Selecciona una pieza</span>
+      }
+    </div>
+  </section>
+
+  <section class="summary">
+    <h2>Dron</h2>
+    <p>Huecos rellenos: {{ filledCount() }} · Peso total: {{ totalWeightKg() | number: '1.0-3' }} kg</p>
+
+    @if (selected(); as part) {
+      <h3>{{ part.name }}</h3>
+      <table>
+        <thead><tr><th>Característica</th><th>Valor</th><th>Unidad</th></tr></thead>
+        <tbody>
+          @for (c of part.characteristics; track c.code) {
+            <tr><td>{{ c.code }}</td><td>{{ c.value }}</td><td>{{ c.unit }}</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>

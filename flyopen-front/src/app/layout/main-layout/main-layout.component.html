@@ -1,0 +1,45 @@
+
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>FlyOpen</h2>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/main-layout" class="menu-item" routerLinkActive="active" routerLinkActive="{exact:true}">
+        Inicio
+      </a>
+
+      <a routerLink="/main-layout/constituent" class="menu-item" routerLinkActive="active">
+        Constituyentes
+      </a>
+
+      <a routerLink="/main-layout/imports" class="menu-item" routerLinkActive="active">
+        Importaciones
+      </a>
+
+      <a routerLink="/main-layout/configuration" class="menu-item" routerLinkActive="active">
+        Configuración
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button type="button">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="topbar">
+      <h1>Panel principal</h1>
+    </header>
+
+    <section class="page-content">
+      <h2>Bienvenido a FlyOpen</h2>
+
+      <div class="dashboard">
+    <router-outlet />
+      </div>
+    </section>
+  </main>
+</div>
